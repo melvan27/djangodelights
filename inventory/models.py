@@ -80,12 +80,17 @@ class RecipeRequirement(models.Model):
 
     def __str__(self):
         quantity_str = '{:g}'.format(float(self.quantity))
-
+        unit_display = self.get_unit_display()
         if self.ingredient.unit == 'egg':
-            unit_display = 'egg' if self.quantity == 1 else 'eggs'
             return f'{quantity_str} {unit_display} for {self.menu_item.name}'
         else:
-            return f'{quantity_str} {self.ingredient.unit} of {self.ingredient.name} for {self.menu_item.name}'
+            return f'{quantity_str} {unit_display} of {self.ingredient.name} for {self.menu_item.name}'
+    
+    def get_unit_display(self):
+        for choice in self.ingredient.UNIT_CHOICES:
+            if self.ingredient.unit == choice[0]:
+                return choice[1] if self.quantity == 1 else choice[2]
+        return self.ingredient.unit
 
     class Meta:
         verbose_name = _("Recipe Requirement")
