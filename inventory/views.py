@@ -6,6 +6,10 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from .models import Ingredient, MenuItem, Purchase, RecipeRequirement
 from .forms import IngredientForm, MenuItemForm, RecipeRequirementForm, PurchaseForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from .serializers import IngredientSerializer, MenuItemSerializer, RecipeRequirementSerializer, PurchaseSerializer
+from .permissions import ReadOnlyOrAuthenticated
 
 class HomePageView(LoginRequiredMixin, TemplateView):
     template_name = 'inventory/home.html'
@@ -96,3 +100,23 @@ class IngredientUpdateView(LoginRequiredMixin, UpdateView):
     form_class = IngredientForm
     template_name = 'inventory/update_ingredient.html'
     success_url = reverse_lazy('ingredient-list')
+
+class IngredientViewSet(viewsets.ModelViewSet):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+    permission_classes = [ReadOnlyOrAuthenticated]
+
+class MenuItemViewSet(viewsets.ModelViewSet):
+    queryset = MenuItem.objects.all()
+    serializer_class = MenuItemSerializer
+    permission_classes = [ReadOnlyOrAuthenticated]
+
+class RecipeRequirementViewSet(viewsets.ModelViewSet):
+    queryset = RecipeRequirement.objects.all()
+    serializer_class = RecipeRequirementSerializer
+    permission_classes = [ReadOnlyOrAuthenticated]
+
+class PurchaseViewSet(viewsets.ModelViewSet):
+    queryset = Purchase.objects.all()
+    serializer_class = PurchaseSerializer
+    permission_classes = [ReadOnlyOrAuthenticated]
