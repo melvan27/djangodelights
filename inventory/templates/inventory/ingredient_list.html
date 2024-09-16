@@ -16,7 +16,7 @@
     {% for ingredient in ingredients %}
     <tr>
       <td>{{ ingredient.name }}</td>
-      <td>{{ ingredient.quantity }}</td>
+      <td>{{ ingredient.quantity|floatformat }}</td>
       <td>{{ ingredient.get_unit_display }}</td>
       <td>${{ ingredient.unit_price }}/{{ ingredient.unit }}</td>
       <td>

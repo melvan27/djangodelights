@@ -24,7 +24,7 @@
     {% endfor %}
   </tbody>
 </table>
-<a href="{% url 'purchase-list' %}" class="btn btn-primary">View more purchases</a>
+<a href="{% url 'purchase-list' %}" class="btn btn-primary mb-4">View more purchases</a>
 
 <h2>Low Ingredients</h2>
 <table class="table table-striped">
@@ -39,12 +39,13 @@
     {% for ingredient in low_ingredients %}
     <tr>
       <td>{{ ingredient.name }}</td>
-      <td>{{ ingredient.quantity }}</td>
+      <td>{{ ingredient.quantity|floatformat }}</td>
       <td>{{ ingredient.get_unit_display }}</td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+<a href="{% url 'ingredient-list' %}" class="btn btn-primary mb-4">View all ingredients</a>
 
 <h2>Menu Items</h2>
 <table class="table table-striped">
@@ -58,7 +59,7 @@
     {% for item in menu_items %}
     <tr>
       <td>{{ item.name }}</td>
-      <td>{{ item.price }}</td>
+      <td>${{ item.price }}</td>
     </tr>
     {% endfor %}
   </tbody>
