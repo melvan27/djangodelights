@@ -1,0 +1,43 @@
+{% extends 'inventory/base.html' %}
+{% load widget_tweaks %}
+{% block title %}Add Ingredient{% endblock %}
+{% block content %}
+<h1 class="mb-4">Add Ingredient</h1>
+<div class="row">
+  <div class="col-md-6">
+    <form method="post" class="needs-validation" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="mb-3">
+        <label for="{{ form.name.id_for_label }}" class="form-label">Name:</label>
+        {{ form.name|add_class:"form-control"|add_error_class:"is-invalid" }}
+        <div class="invalid-feedback">
+          {{ form.name.errors }}
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="{{ form.quantity.id_for_label }}" class="form-label">Quantity:</label>
+        {{ form.quantity|add_class:"form-control"|add_error_class:"is-invalid" }}
+        <div class="invalid-feedback">
+          {{ form.quantity.errors }}
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="{{ form.unit.id_for_label }}" class="form-label">Unit:</label>
+        {{ form.unit|add_class:"form-control"|add_error_class:"is-invalid" }}
+        <div class="invalid-feedback">
+          {{ form.unit.errors }}
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="{{ form.unit_price.id_for_label }}" class="form-label">Unit Price:</label>
+        {{ form.unit_price|add_class:"form-control"|add_error_class:"is-invalid" }}
+        <div class="invalid-feedback">
+          {{ form.unit_price.errors }}
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Ingredient</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

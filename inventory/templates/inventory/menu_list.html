@@ -1,0 +1,49 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block title %}Menu{% endblock %}
+{% block content %}
+<h1 class="text-center my-4">Menu</h1>
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Image</th>
+      <th scope="col">Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Ingredients</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in menu_items %}
+    <tr>
+      <td>
+        {% if item.image_url %}
+        <img src="{{ item.image_url }}" alt="{{ item.name }}" class="img-thumbnail" width="100" height="100">
+        {% else %}
+        <img src="{% static 'inventory/no_image.png' %}" alt="No image" class="img-thumbnail" width="100" height="100">
+        {% endif %}
+      </td>
+      <td>{{ item.name }}</td>
+      <td>${{ item.price }}</td>
+      <td>
+        <ul class="list-unstyled">
+          {% for requirement in item.recipe_requirements.all %}
+          <li>
+            {% if requirement.ingredient.name == "eggs" %}
+              {{ requirement.quantity|floatformat }} {{ requirement.get_unit_display }}
+            {% else %}
+              {{ requirement.quantity|floatformat }} {{ requirement.get_unit_display }} of {{ requirement.ingredient.name }}
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </td>
+      <td>
+        <a href="{% url 'recipe-requirement-add' %}?menu_item={{ item.id }}" class="btn btn-primary btn-sm">Add Recipe Requirement</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{% url 'menu-add' %}" class="btn btn-success mt-3">Add New Menu Item</a>
+{% endblock %}
