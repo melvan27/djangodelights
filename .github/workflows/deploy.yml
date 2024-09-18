@@ -1,0 +1,38 @@
+name: Django CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
+
+    - name: Deploy to EC2 via AWS SSM
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: 'us-east-2'
+        EC2_INSTANCE_ID: 'i-08bd6e250175a1862'
+      run: |
+        aws ec2 start-instances --instance-ids $EC2_INSTANCE_ID
+        aws ssm send-command \
+          --document-name "AWS-RunShellScript" \
+          --targets "Key=instanceids,Values=$EC2_INSTANCE_ID" \
+          --parameters 'commands=["cd /home/ubuntu/djangodelights", "git pull", "source venv/bin/activate", "pip install -r requirements.txt", "python manage.py migrate", "python manage.py collectstatic --noinput", "sudo systemctl restart nginx"]'
