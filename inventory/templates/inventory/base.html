@@ -18,11 +18,20 @@
             <li class="nav-item"><a class="nav-link" href="{% url 'profit-and-revenue' %}">Profit & Revenue</a></li>
           </ul>
           <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-link nav-link">Log Out</button>
-              </form>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ user.username }}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="dropdown-item">Log Out</button>
+                  </form>
+                </li>
+              </ul>
             </li>
           </ul>
         </div>

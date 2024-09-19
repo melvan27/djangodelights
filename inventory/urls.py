@@ -5,7 +5,8 @@ from .views import (
     PurchaseListView, ProfitAndRevenueView, IngredientCreateView,
     MenuItemCreateView, RecipeRequirementCreateView, PurchaseCreateView,
     IngredientUpdateView, HomePageView, IngredientViewSet, MenuItemViewSet,
-    RecipeRequirementViewSet, PurchaseViewSet
+    RecipeRequirementViewSet, PurchaseViewSet, SignUpView, ProfileView,
+    EditProfileView, ChangePasswordView
 )
 
 router = DefaultRouter()
@@ -17,6 +18,10 @@ router.register(r'purchases', PurchaseViewSet)
 urlpatterns = [
     path('api/', include(router.urls)),
     path('', HomePageView.as_view(), name='home'),
+    path('signup/', SignUpView.as_view(), name='signup'),
+    path('profile/', ProfileView.as_view(), name='profile'),
+    path('profile/edit/', EditProfileView.as_view(), name='edit-profile'),
+    path('profile/password/', ChangePasswordView.as_view(), name='password_change'),
     path('ingredients/', IngredientListView.as_view(), name='ingredient-list'),
     path('ingredients/delete/<int:pk>/', IngredientDeleteView.as_view(), name='ingredient-delete'),
     path('ingredients/add/', IngredientCreateView.as_view(), name='ingredient-add'),

@@ -2,14 +2,29 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView, FormView
 from .models import Ingredient, MenuItem, Purchase, RecipeRequirement
-from .forms import IngredientForm, MenuItemForm, RecipeRequirementForm, PurchaseForm
+from .forms import IngredientForm, MenuItemForm, RecipeRequirementForm, PurchaseForm, CustomUserCreationForm, UserProfileForm, CustomPasswordChangeForm
+from django.contrib.auth import login, update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .serializers import IngredientSerializer, MenuItemSerializer, RecipeRequirementSerializer, PurchaseSerializer
 from .permissions import ReadOnlyOrAuthenticated
+
+class SignUpView(CreateView):
+    model = User
+    form_class = CustomUserCreationForm
+    template_name = 'registration/signup.html'
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = form.save()
+        login(self.request, user)
+        return response
 
 class HomePageView(LoginRequiredMixin, TemplateView):
     template_name = 'inventory/home.html'
@@ -21,6 +36,37 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         context['low_ingredients'] = Ingredient.objects.order_by('quantity')[:5]
         context['menu_items'] = MenuItem.objects.all()
         return context
+
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'registration/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
+
+class EditProfileView(LoginRequiredMixin, UpdateView):
+    form_class = UserProfileForm
+    template_name = 'registration/edit_profile.html'
+    success_url = reverse_lazy('profile')
+
+    def get_object(self):
+        return self.request.user
+
+class ChangePasswordView(LoginRequiredMixin, FormView):
+    template_name = 'registration/change_password.html'
+    form_class = CustomPasswordChangeForm
+    success_url = reverse_lazy('profile')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        user = form.save()
+        update_session_auth_hash(self.request, user)
+        return super().form_valid(form)
 
 class IngredientListView(LoginRequiredMixin, ListView):
     model = Ingredient
