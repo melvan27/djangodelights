@@ -20,7 +20,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m venv venv
+        virtualenv venv
         source venv/bin/activate
         pip install -r requirements.txt
 
@@ -32,7 +32,8 @@ jobs:
         EC2_INSTANCE_ID: 'i-08bd6e250175a1862'
       run: |
         aws ec2 start-instances --instance-ids $EC2_INSTANCE_ID
+        aws ec2 wait instance-running --instance-ids $EC2_INSTANCE_ID
         aws ssm send-command \
           --document-name "AWS-RunShellScript" \
           --targets "Key=instanceids,Values=$EC2_INSTANCE_ID" \
-          --parameters 'commands=["cd /home/ubuntu/djangodelights", "git pull", "source venv/bin/activate", "pip install -r requirements.txt", "python manage.py migrate", "python manage.py collectstatic --noinput", "sudo systemctl restart nginx"]'
+          --parameters 'commands=["cd /home/ubuntu/djangodelights", "git pull", "source venv/bin/activate", "pip install -r requirements.txt", "python manage.py migrate", "python manage.py collectstatic --noinput", "sudo systemctl restart nginx", "sudo systemctl restart gunicorn"]' \
