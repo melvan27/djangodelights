@@ -42,7 +42,7 @@ Django Delights is a web application designed to manage a restaurant's menu, ing
   - **`urls.py`**: URL routing for the inventory app.
 
 ## Getting Started
-You can explore the project at the deployed AWS link: [http://3.132.126.215/](http://3.132.126.215/). Alternatively, you can run the project on your own computer following the installation instructions below.
+You can explore the project at the deployed AWS link: [https://melvan27.pythonanywhere.com/](https://melvan27.pythonanywhere.com/). Alternatively, you can run the project on your own computer following the installation instructions below.
 
 ### Prerequisites
 
@@ -73,6 +73,30 @@ You can explore the project at the deployed AWS link: [http://3.132.126.215/](ht
     ```
 
 5. Open your browser and navigate to `http://127.0.0.1:8000/`.
+
+## Profile
+
+### Signing Up
+
+1. Navigate to the homepage and click the "Need an account? Register" button below the login form.
+2. Fill in the registration form with your details, including your username, first name, last name, email address, and password.
+3. Click the "Sign Up" button to create your account.
+4. You can now log in using your new credentials.
+
+### Edit Profile
+1. Navigate to the "Profile" page by clicking on your username in the top-right corner of the navigation bar and selecting "Profile" from the dropdown menu.
+2. On the "Profile" page, you can view your current profile information.
+3. To edit your profile, click the "Edit Profile" button.
+4. Update your profile information as needed.
+5. Click "Save Changes" to apply the updates.
+
+### Changing Password
+
+1. Navigate to the "Profile" page by clicking on your username in the top-right corner of the navigation bar and selecting "Profile" from the dropdown menu.
+2. On the "Profile" page, click the "Change Password" button.
+3. Enter your current password, followed by your new password.
+4. Confirm your new password by entering it again.
+5. Click "Change Password" to update your password.
 
 ## Usage
 
@@ -111,7 +135,7 @@ To get started with the API, you can use Postman to make requests. Follow these 
 ### 1. Obtain a JWT (JSON Web Token)
 
 1. Open Postman and create a new POST request.
-2. Set the URL to `http://3.132.126.215/api/token/`.
+2. Set the URL to `https://melvan27.pythonanywhere.com/api/token/` (or `http://127.0.0.1:8000/api/token` if you are hosting the project in your local environment).
 3. In the "Body" tab, select "x-www-form-urlencoded" and set the format to "JSON".
 4. Enter your username and password in the following format:
     ```json
