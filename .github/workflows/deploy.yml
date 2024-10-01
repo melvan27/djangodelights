@@ -22,18 +22,14 @@ jobs:
       run: |
         python3 -m venv venv
         source venv/bin/activate
+        python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Deploy to EC2 via AWS SSM
+    - name: Deploy to PythonAnywhere
       env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: 'us-east-2'
-        EC2_INSTANCE_ID: 'i-08bd6e250175a1862'
+        PA_API_TOKEN: ${{ secrets.PA_API_TOKEN }}
       run: |
-        aws ec2 start-instances --instance-ids $EC2_INSTANCE_ID
-        aws ec2 wait instance-running --instance-ids $EC2_INSTANCE_ID
-        aws ssm send-command \
-          --document-name "AWS-RunShellScript" \
-          --targets "Key=instanceids,Values=$EC2_INSTANCE_ID" \
-          --parameters 'commands=["cd /home/ubuntu/djangodelights || exit 1", "git pull origin main || exit 1", "source venv/bin/activate || exit 1", "pip install -r requirements.txt || exit 1", "python manage.py migrate || exit 1", "python manage.py collectstatic --noinput || exit 1", "sudo systemctl restart nginx || exit 1", "sudo systemctl restart gunicorn || exit 1"]' \
+        source venv/bin/activate
+        pip install pythonanywhere
+        pa_autoconfigure_django.py --nuke djangodelights.pythonanywhere.com
+        pythonanywhere webapp reload melvan27.pythonanywhere.com
