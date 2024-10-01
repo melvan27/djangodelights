@@ -43,6 +43,7 @@ atlassian-ide-plugin.xml
 # Python #
 *.py[cod]
 *$py.class
+djangodelights/settings.py
 
 # Distribution / packaging
 .Python build/
