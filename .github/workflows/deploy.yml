@@ -31,5 +31,6 @@ jobs:
       run: |
         source venv/bin/activate
         pip install pythonanywhere
-        pa_autoconfigure_django.py --nuke djangodelights.pythonanywhere.com
+        export WORKON_HOME=$HOME/.virtualenvs
+        pa_autoconfigure_django.py --nuke melvan27.pythonanywhere.com
         pythonanywhere webapp reload melvan27.pythonanywhere.com
